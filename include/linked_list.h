@@ -28,4 +28,10 @@ void linked_list_visualize(linked_list_instance_ts * p_lili, const char * p_tag)
 /* Interface function prototypes - Insertion */
 linked_list_bool_te linked_list_insert(linked_list_instance_ts * p_lili, const char * p_insertion_key);
 
+/* Interface function prototypes - Deletion */
+linked_list_bool_te linked_list_delete(linked_list_instance_ts * p_lili, const char * p_deletion_key);
+void linked_list_clear(linked_list_instance_ts * p_lili);
+
+/* Interface function prototypes - Utility */
+
 #endif

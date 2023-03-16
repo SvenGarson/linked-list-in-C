@@ -47,6 +47,15 @@ linked_list_node_ts * create_node_for_key(const char * p_new_key)
 	return p_new_node;
 }
 
+void delete_node(linked_list_node_ts * p_node_to_delete)
+{
+	if (p_node_to_delete == NULL)
+		return;
+
+	free(p_node_to_delete->p_key);
+	free(p_node_to_delete);
+}
+
 /* Interface function definitions - Creation */
 linked_list_instance_ts * linked_list_create(void)
 {
@@ -81,11 +90,11 @@ void linked_list_visualize(linked_list_instance_ts * p_lili, const char * p_tag)
 	/* Print the contents of the linked list nodes from head to tail */
 	if (p_lili == NULL || p_lili->p_head == NULL)
 	{
-		printf("\nNo data to display for linked list tagged '%s'", p_tag ? p_tag : "N/A");
+		printf("\n\nNo data to display for linked list tagged '%s' head: %p", p_tag ? p_tag : "N/A", p_lili->p_head);
 		return;
 	}
 
-	printf("\nVisualizing nodes for linked list tagged '%s':", p_tag ? p_tag : "N/A");
+	printf("\n\nVisualizing nodes for linked list tagged '%s' head: %p", p_tag ? p_tag : "N/A", p_lili->p_head);
 	printf("\n\t%-10s | %-30s", "Index", " Key");
 	printf("\n\t%-10s-+-%-30s", "----------", "--------------------");
 	linked_list_node_ts * p_visual_node;
@@ -142,3 +151,63 @@ linked_list_bool_te linked_list_insert(linked_list_instance_ts * p_lili, const c
 	
 	return LINKED_LIST_TRUE;
 }
+
+/* Interface function definitions - Deletion */
+linked_list_bool_te linked_list_delete(linked_list_instance_ts * p_lili, const char * p_deletion_key)
+{
+	if (p_lili == NULL || p_deletion_key == NULL)
+	{
+		return LINKED_LIST_FALSE;
+	}
+
+	/* Delete the node when it exists by key string */
+	linked_list_node_ts * p_search_node_parent = NULL;
+	linked_list_node_ts * p_search_node = p_lili->p_head;
+	while (p_search_node)
+	{
+		if (strcmp(p_search_node->p_key, p_deletion_key) == 0)
+		{
+			/* Found a matching node to delete - Delete it and do the housekeeping */
+			if (p_search_node_parent == NULL)
+			{
+				p_lili->p_head = p_search_node->p_next;
+			}
+			else
+			{
+				p_search_node_parent->p_next = p_search_node->p_next;
+			}
+
+			delete_node(p_search_node);
+			return LINKED_LIST_TRUE;
+		}
+
+		/* Go to the next node in the sequence */
+		p_search_node_parent = p_search_node;
+		p_search_node = p_search_node->p_next;
+	}
+
+	/* No node deleted */
+	return LINKED_LIST_FALSE;
+}
+
+void linked_list_clear(linked_list_instance_ts * p_lili)
+{
+	if (p_lili == NULL || p_lili->p_head == NULL)
+	{
+		return;
+	}
+
+	/* Deallocate all nodes in sequence */
+	linked_list_node_ts * p_deletion_node = p_lili->p_head;
+	while (p_deletion_node != NULL)
+	{
+		linked_list_node_ts * p_next_deletion_node = p_deletion_node->p_next;
+		delete_node(p_deletion_node);
+		p_deletion_node = p_next_deletion_node;
+	}
+
+	p_lili->p_head = NULL;
+}
+
+/* Interface function definitions - Utility */
+???

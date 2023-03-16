@@ -15,11 +15,13 @@ This implementation will use a linked list to store string instances through str
 - Destroyal
   + [OK] Destroy linked list and deallocate all memory used for nodes and the instance itself
 - Insertion
-  + Append if value was not yet added
+  + [OK] Append if value was not yet added
 - Deletion
-  + Delete node for value
+  + [OK] Delete node for value
+  + [OK] Clear all nodes
 - Utility
   + Has entry with value
+  + Number of current nodes int lili
 - Traversal (access each in the list)
   + Callback invoked for every single entry in the current order
 - Sorting (in place?)
@@ -39,6 +41,7 @@ The interface is to be testes thoroughly in terms of all operations and edge-cas
 - Reporting return values for all operations
 - Head is re-assigned properly when lili is initialized and fully emptied
 - Empty key string when adding fails creating a new node on insertion
+- Cannot insert duplicates based on key
 
 ### Documentation
 - Light in-code documentation
