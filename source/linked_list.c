@@ -66,6 +66,7 @@ linked_list_instance_ts * linked_list_create(void)
 	}
 
 	/* Initialize the linked list instance */
+	p_new_lili->size = 0;
 	p_new_lili->p_head = NULL;
 	return p_new_lili;
 }
@@ -78,9 +79,11 @@ void linked_list_destroy(linked_list_instance_ts * p_lili)
 		return;
 	}
 
-	/* TODO-GS: Deallocat all node memory allocations */
+	/* Clear all nodes */
+	linked_list_clear(p_lili);
 
 	/* Deallocate linked list instance */
+	p_lili->size = 0;
 	free(p_lili);
 }
 
@@ -90,11 +93,11 @@ void linked_list_visualize(linked_list_instance_ts * p_lili, const char * p_tag)
 	/* Print the contents of the linked list nodes from head to tail */
 	if (p_lili == NULL || p_lili->p_head == NULL)
 	{
-		printf("\n\nNo data to display for linked list tagged '%s' head: %p", p_tag ? p_tag : "N/A", p_lili->p_head);
+		printf("\n\nNo data to display for linked list tagged '%s' head: %p size: %d", p_tag ? p_tag : "N/A", p_lili->p_head, p_lili->size);
 		return;
 	}
 
-	printf("\n\nVisualizing nodes for linked list tagged '%s' head: %p", p_tag ? p_tag : "N/A", p_lili->p_head);
+	printf("\n\nVisualizing nodes for linked list tagged '%s' head: %p size: %d", p_tag ? p_tag : "N/A", p_lili->p_head ,p_lili->size);
 	printf("\n\t%-10s | %-30s", "Index", " Key");
 	printf("\n\t%-10s-+-%-30s", "----------", "--------------------");
 	linked_list_node_ts * p_visual_node;
@@ -106,7 +109,10 @@ void linked_list_visualize(linked_list_instance_ts * p_lili, const char * p_tag)
 }
 
 /* Interface function definitions - Insertion */
-linked_list_bool_te linked_list_insert(linked_list_instance_ts * p_lili, const char * p_insertion_key)
+linked_list_bool_te linked_list_insert(
+	linked_list_instance_ts * p_lili,
+	const char * p_insertion_key
+)
 {
 	if (p_lili == NULL || p_insertion_key == NULL)
 	{
@@ -138,6 +144,7 @@ linked_list_bool_te linked_list_insert(linked_list_instance_ts * p_lili, const c
 	}
 
 	/* Success */
+	p_lili->size++;
 	if (p_search_node_parent == NULL)
 	{
 		/* List currently empty */
@@ -153,7 +160,10 @@ linked_list_bool_te linked_list_insert(linked_list_instance_ts * p_lili, const c
 }
 
 /* Interface function definitions - Deletion */
-linked_list_bool_te linked_list_delete(linked_list_instance_ts * p_lili, const char * p_deletion_key)
+linked_list_bool_te linked_list_delete(
+	linked_list_instance_ts * p_lili,
+	const char * p_deletion_key
+)
 {
 	if (p_lili == NULL || p_deletion_key == NULL)
 	{
@@ -177,6 +187,7 @@ linked_list_bool_te linked_list_delete(linked_list_instance_ts * p_lili, const c
 				p_search_node_parent->p_next = p_search_node->p_next;
 			}
 
+			p_lili->size--;
 			delete_node(p_search_node);
 			return LINKED_LIST_TRUE;
 		}
@@ -206,11 +217,15 @@ void linked_list_clear(linked_list_instance_ts * p_lili)
 		p_deletion_node = p_next_deletion_node;
 	}
 
+	p_lili->size = 0;
 	p_lili->p_head = NULL;
 }
 
 /* Interface function definitions - Utility */
-linked_list_bool_te linked_list_has_key(linked_list_instance_ts * p_lili, const char * p_search_key)
+linked_list_bool_te linked_list_has_key(
+	linked_list_instance_ts * p_lili,
+	const char * p_search_key
+)
 {
 	if (p_lili == NULL || p_lili->p_head == NULL)
 	{
@@ -231,8 +246,51 @@ linked_list_bool_te linked_list_has_key(linked_list_instance_ts * p_lili, const 
 	return LINKED_LIST_FALSE;
 }
 
-int linked_list_entries(linked_list_instance_ts * p_lili)
+int linked_list_size(linked_list_instance_ts * p_lili)
 {
 	/* Count when adding and deleting nodes in the linked list struct */
-	???
+	return (p_lili != NULL) ? p_lili->size : 0;
+}
+
+/* Interface function definitions - Traversal */
+void linked_list_traverse_in_order(
+	linked_list_instance_ts * p_lili,
+	linked_list_traversal_callback_t p_traversal_callback
+)
+{
+	if (p_lili == NULL || p_lili->p_head == NULL)
+	{
+		return;
+	}
+
+	/* Invoke the callback for every linked list node in sequence */
+	const linked_list_node_ts * p_traversed_node;
+	int node_index = 1;
+	for (p_traversed_node = p_lili->p_head; p_traversed_node; p_traversed_node = p_traversed_node->p_next)
+	{
+		p_traversal_callback(node_index++, p_traversed_node->p_key);
+	}
+}
+
+/* Interface function definitions - Sorting */
+void linked_list_reverse_in_place(linked_list_instance_ts * p_lili)
+{
+	if (p_lili == NULL || p_lili->p_head == NULL)
+	{
+		return;
+	}
+
+	/* Reverse the linked list entries in place */
+	linked_list_node_ts * p_previous_node = NULL;
+	linked_list_node_ts * p_current_node = p_lili->p_head;
+	while (p_current_node)
+	{
+		linked_list_node_ts * const p_next_node = p_current_node->p_next;
+
+		p_lili->p_head = p_current_node;
+		p_current_node->p_next = p_previous_node;
+
+		p_previous_node = p_current_node;
+		p_current_node = p_next_node;
+	}
 }

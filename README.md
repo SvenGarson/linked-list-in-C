@@ -21,13 +21,13 @@ This implementation will use a linked list to store string instances through str
   + [OK] Clear all nodes
 - Utility
   + [OK] Has entry with value
-  + Number of current nodes int lili
+  + [OK] Number of current nodes int lili
 - Traversal (access each in the list)
-  + Callback invoked for every single entry in the current order
+  + [OK] Callback invoked for every single entry in the current order
 - Sorting (in place?)
-  + Sorting nodes in place using some sorting callback
+  + [OK] Sorting nodes in place using some sorting callback
 - Debugging
-  + Print the contens of the linked list to the console
+  + [OK] Print the contens of the linked list to the console
 
 ### Testing
 The interface is to be testes thoroughly in terms of all operations and edge-cases.
