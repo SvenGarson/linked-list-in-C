@@ -210,4 +210,29 @@ void linked_list_clear(linked_list_instance_ts * p_lili)
 }
 
 /* Interface function definitions - Utility */
-???
+linked_list_bool_te linked_list_has_key(linked_list_instance_ts * p_lili, const char * p_search_key)
+{
+	if (p_lili == NULL || p_lili->p_head == NULL)
+	{
+		return LINKED_LIST_FALSE;
+	}
+
+	/* Determines whether the provided key was previously added to the linked list */
+	linked_list_node_ts * p_search_node;
+	for (p_search_node = p_lili->p_head; p_search_node; p_search_node = p_search_node->p_next)
+	{
+		if (strcmp(p_search_node->p_key, p_search_key) == 0)
+		{
+			return LINKED_LIST_TRUE;
+		}
+	}
+
+	/* No node with the provided key was found */
+	return LINKED_LIST_FALSE;
+}
+
+int linked_list_entries(linked_list_instance_ts * p_lili)
+{
+	/* Count when adding and deleting nodes in the linked list struct */
+	???
+}

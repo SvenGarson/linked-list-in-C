@@ -40,6 +40,20 @@ int main(void)
 	linked_list_clear(p_lili);
 	linked_list_visualize(p_lili, "After interface clearing");
 
+	linked_list_insert(p_lili, "Amanita");
+	linked_list_insert(p_lili, "Puff");
+	linked_list_insert(p_lili, "Muscarius");
+	linked_list_visualize(p_lili, "New entries for searching");
+
+	const char * search_keys[] = { "Amani", "Puff", "Muscarius", "Amanita", "Lollita"};
+	putchar('\n');
+	for (int srch_index = 0; srch_index < (int)(sizeof(search_keys) / sizeof(char *)); srch_index++)
+	{
+		const char * p_search_key = search_keys[srch_index];
+		linked_list_bool_te found = linked_list_has_key(p_lili, p_search_key);
+		printf("\nSearch key: %-30s Found: %s", p_search_key, found ? "True" : "False");
+	}
+
 	linked_list_destroy(p_lili);
 	printf("\n\n===========================END==========================");
 

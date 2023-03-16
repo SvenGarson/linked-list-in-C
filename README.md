@@ -20,7 +20,7 @@ This implementation will use a linked list to store string instances through str
   + [OK] Delete node for value
   + [OK] Clear all nodes
 - Utility
-  + Has entry with value
+  + [OK] Has entry with value
   + Number of current nodes int lili
 - Traversal (access each in the list)
   + Callback invoked for every single entry in the current order
@@ -54,5 +54,6 @@ The interface is to be testes thoroughly in terms of all operations and edge-cas
 - performance
 
 ### Finalizing
+- Abstract and DRY without loosing too much time
 - Handle all todo
 - Minimize and uniform debugging prints
