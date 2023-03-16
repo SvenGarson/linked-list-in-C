@@ -4,7 +4,7 @@
 #include <string.h>
 
 /* Private helper functions */
-linked_list_node_ts * create_node_for_key(const char * p_new_key)
+static linked_list_node_ts * create_node_for_key(const char * p_new_key)
 {
 	if (p_new_key == NULL)
 	{
@@ -47,7 +47,7 @@ linked_list_node_ts * create_node_for_key(const char * p_new_key)
 	return p_new_node;
 }
 
-void delete_node(linked_list_node_ts * p_node_to_delete)
+static void delete_node(linked_list_node_ts * p_node_to_delete)
 {
 	if (p_node_to_delete == NULL)
 		return;
@@ -219,6 +219,7 @@ void linked_list_clear(linked_list_instance_ts * p_lili)
 
 	p_lili->size = 0;
 	p_lili->p_head = NULL;
+	printf("-----> Setting head: %p", p_lili->p_head);
 }
 
 /* Interface function definitions - Utility */

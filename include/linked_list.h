@@ -47,7 +47,7 @@ void linked_list_clear(linked_list_instance_ts * p_lili);
 linked_list_bool_te linked_list_has_key(
 	linked_list_instance_ts * p_lili,
 	const char * p_search_key
-	);
+);
 int linked_list_size(linked_list_instance_ts * p_lili);
 
 /* Interface function prototypes - Traversal */
