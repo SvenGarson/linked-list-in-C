@@ -34,10 +34,6 @@ The interface is to be testes thoroughly in terms of all operations and edge-cas
 
 **Test suite:**
 - general
-  + destroying linked list clears all nodes and sets head to zero
-  + creating; adding; deleting; clearing and destroying sets the size properly
-  + insert in empty list adds single entry i.e. inits the lili
-  + insert in non-empty list adds accordingly (multiple)
   + delete from empty list has not effect and head stays null
   + delete from single size list resets head to null
   + delete multiple from bigger list removed accordingly
@@ -45,10 +41,12 @@ The interface is to be testes thoroughly in terms of all operations and edge-cas
   + traverse in order gets the right number and order of nodes, none for empty lili's
   + has key is false when key not in list
   + has key true when key in list
-  + reverse empty list has no effect
+  + reverse empty list has no effectcls
   + reverse single entry list has no effect
   + reverse many entried list reversed the list accordingly
   + operations work between different linked list instances
+  + failure when adding duplicated + no side-effect (size and entry)
+  + failure when deleing non-existen entries + no side-effect (size and entry)
 - guards
   + all functions argument guards on multiple levels + no side-effects
 - notification
@@ -75,3 +73,9 @@ The interface is to be testes thoroughly in terms of all operations and edge-cas
 - Abstract and DRY without loosing too much time
 - Handle all todo
 - Minimize and uniform debugging prints
+
+## Problems
+- destroying the linked list more than once causes freing of a previously deallocated pointer
+  the interface should work differently here?
+
+  The thing is that the linked list instance must not be accessed after is has been freed

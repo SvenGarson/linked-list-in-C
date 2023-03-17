@@ -82,13 +82,12 @@ void linked_list_destroy(linked_list_instance_ts * p_lili)
 	/* Clear all nodes */
 	linked_list_clear(p_lili);
 
-	/* Deallocate linked list instance */
-	p_lili->size = 0;
+	/* Deallocate linked list instance - Do not use instance after destroyal */
 	free(p_lili);
 }
 
 /* Interface function definitions - Debugging */
-void linked_list_visualize(linked_list_instance_ts * p_lili, const char * p_tag)
+void linked_list_visualize(const linked_list_instance_ts * p_lili, const char * p_tag)
 {
 	/* Print the contents of the linked list nodes from head to tail */
 	if (p_lili == NULL || p_lili->p_head == NULL)
@@ -219,7 +218,6 @@ void linked_list_clear(linked_list_instance_ts * p_lili)
 
 	p_lili->size = 0;
 	p_lili->p_head = NULL;
-	printf("-----> Setting head: %p", p_lili->p_head);
 }
 
 /* Interface function definitions - Utility */
@@ -247,7 +245,7 @@ linked_list_bool_te linked_list_has_key(
 	return LINKED_LIST_FALSE;
 }
 
-int linked_list_size(linked_list_instance_ts * p_lili)
+int linked_list_size(const linked_list_instance_ts * p_lili)
 {
 	/* Count when adding and deleting nodes in the linked list struct */
 	return (p_lili != NULL) ? p_lili->size : 0;
@@ -255,7 +253,7 @@ int linked_list_size(linked_list_instance_ts * p_lili)
 
 /* Interface function definitions - Traversal */
 void linked_list_traverse_in_order(
-	linked_list_instance_ts * p_lili,
+	const linked_list_instance_ts * p_lili,
 	linked_list_traversal_callback_t p_traversal_callback
 )
 {

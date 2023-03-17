@@ -28,7 +28,7 @@ linked_list_instance_ts * linked_list_create(void);
 void linked_list_destroy(linked_list_instance_ts * p_lili);
 
 /* Interface function prototypes - Debugging */
-void linked_list_visualize(linked_list_instance_ts * p_lili, const char * p_tag);
+void linked_list_visualize(const linked_list_instance_ts * p_lili, const char * p_tag);
 
 /* Interface function prototypes - Insertion */
 linked_list_bool_te linked_list_insert(
@@ -48,11 +48,11 @@ linked_list_bool_te linked_list_has_key(
 	linked_list_instance_ts * p_lili,
 	const char * p_search_key
 );
-int linked_list_size(linked_list_instance_ts * p_lili);
+int linked_list_size(const linked_list_instance_ts * p_lili);
 
 /* Interface function prototypes - Traversal */
 void linked_list_traverse_in_order(
-	linked_list_instance_ts * p_lili,
+	const linked_list_instance_ts * p_lili,
 	linked_list_traversal_callback_t p_traversal_callback
 );
 
