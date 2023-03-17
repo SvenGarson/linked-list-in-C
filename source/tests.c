@@ -4,7 +4,7 @@
 
 /* Defines */
 #define MAX_TEST_RESULTS (64)
-#define MAX_TEST_RESULT_DESCRIPTION_LENGTH (80)
+#define MAX_TEST_RESULT_DESCRIPTION_LENGTH (100)
 
 /* Datatypes */
 typedef enum {
@@ -60,7 +60,7 @@ void test_results_visualize(test_results_ts results)
 		test_result_with_description_ts * p_current_results = results.test_results + result_index;
 		if (!p_current_results->success) all_tests_succeeded = TEST_FALSE;
 		printf(
-			"\n\t[%-3d] %-80s %-s",
+			"\n\t[%-3d] %-100s %-s",
 			result_index + 1,
 			p_current_results->description,
 			p_current_results->success ? "Success" : "Failure"
@@ -270,7 +270,7 @@ int main(void)
 
 	linked_list_destroy(p_lili);
 
-	/* Linked list contains nodes in the entered order */
+	/* Linked list contains nodes in the entered order before and after reversing */
 	p_lili = linked_list_create();
 
 	linked_list_insert(p_lili, "A");
@@ -287,7 +287,27 @@ int main(void)
 		test_that_linked_list_has_all_entries_in_order(p_lili, expected_lili_keys_g, sizeof(expected_lili_keys_g) / sizeof(char *))
 	);
 
+	linked_list_insert(p_lili, "X");
+	linked_list_insert(p_lili, "Y");
+	linked_list_reverse_in_place(p_lili);
+	const char * expected_lili_keys_h[] = { "Y", "X", "B", "V", "G", "F", "Z", "A" };
+	test_results_add(
+		&test_results,
+		"Test that non-empty linked list contains nodes in the inserted order after reversal",
+		test_that_linked_list_has_all_entries_in_order(p_lili, expected_lili_keys_h, sizeof(expected_lili_keys_h) / sizeof(char *))
+	);
+
 	linked_list_destroy(p_lili);
+
+	/* Linked list return expected result on success and some other edge-cases*/
+	p_lili = linked_list_create();
+	test_results_add(&test_results,"Test that inserting a new key results in success", linked_list_insert(p_lili, "Ferrari") == LINKED_LIST_TRUE);
+	test_results_add(&test_results,"Test that inserting an existing key results in failure", linked_list_insert(p_lili, "Ferrari") == LINKED_LIST_FALSE);
+	test_results_add(&test_results,"Test that deleting an existing key results in success", linked_list_delete(p_lili, "Ferrari") == LINKED_LIST_TRUE);
+	test_results_add(&test_results,"Test that deleting a non-existen key results in failure", linked_list_delete(p_lili, "Ferrari") == LINKED_LIST_FALSE);
+	test_results_add(&test_results,"Test that inserting an empty string as key fails", linked_list_insert(p_lili, "") == LINKED_LIST_FALSE);
+	test_results_add(&test_results,"Test that inserting a single character string as key fails", linked_list_insert(p_lili, "1") == LINKED_LIST_TRUE);
+	linked_list_destroy(p_lili);	
 
 	/* Execute test suites */
 	test_results_visualize(test_results);

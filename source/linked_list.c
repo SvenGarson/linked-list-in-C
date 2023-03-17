@@ -14,7 +14,6 @@ static linked_list_node_ts * create_node_for_key(const char * p_new_key)
 	const int actual_key_length = strlen(p_new_key);
 	if (actual_key_length < 1)
 	{
-		printf("\nCould not creat new node because the key string is empty");
 		return NULL;
 	}
 
@@ -22,7 +21,6 @@ static linked_list_node_ts * create_node_for_key(const char * p_new_key)
 	linked_list_node_ts * p_new_node = malloc(sizeof(linked_list_node_ts));
 	if (p_new_node == NULL)
 	{
-		printf("\nCould not allocate memory for new node with key '%s'", p_new_key);
 		return NULL;
 	}
 
@@ -31,12 +29,6 @@ static linked_list_node_ts * create_node_for_key(const char * p_new_key)
 	p_new_node->p_key = malloc(sizeof(char) * actual_key_length);
 	if (p_new_node->p_key == NULL)
 	{
-		printf(
-			"\nCould not allocate memory for new node key '%s' (%d)",
-			p_new_key,
-			actual_key_length
-		);
-
 		free(p_new_node);
 		return NULL;
 	}
@@ -126,7 +118,6 @@ linked_list_bool_te linked_list_insert(
 		/* Check for collision */
 		if (strcmp(p_search_node->p_key, p_insertion_key) == 0)
 		{
-			printf("\nFailed to insert key '%s' because it already exists", p_insertion_key);
 			return LINKED_LIST_FALSE;
 		}
 
