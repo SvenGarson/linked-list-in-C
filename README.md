@@ -1,5 +1,5 @@
 # linked-list-in-C
-A minimal implementation of a linked list in C to understand this data structure and the C language better. The focus here was the execution of implementing the data structure and roughly testing it as fast as possible.
+A minimal implementation of a singly-linked list in C to understand this data structure and the C language better. The focus here was the execution of implementing the data structure and roughly testing it as fast as possible.
 
 The implementation could be DRYed up quite a bit to remove redundant bits of code into utility functions, but I chose to experiment with different, more or less idiomatic approaches of implementing things, rather than spending too much time on abstractions.
 
