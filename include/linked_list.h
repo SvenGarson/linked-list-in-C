@@ -18,7 +18,8 @@ typedef struct {
 } linked_list_instance_ts;
 
 typedef void (* linked_list_traversal_callback_t)(
-	int node_index ,const char * const p_traversed_key
+	int node_index,
+	const char * const p_traversed_key
 );
 
 /* Interface function prototypes - Creation */

@@ -1,22 +1,33 @@
 # linked-list-in-C
-A minimal implementation of a linked list in C to understand this datastructure and the C language better. The focus here was the execution of implementing the datastructure and and roughly testing as fast as possible.
+A minimal implementation of a linked list in C to understand this data structure and the C language better. The focus here was the execution of implementing the data structure and roughly testing it as fast as possible.
 
-The implementation could be DRYed up quite a bit to remove redundant bits of code into utility functions, but I chose to experiment with different, more or less idiomatic approaches of implementing things, rather than spending too much time on abstractions too early.
+The implementation could be DRYed up quite a bit to remove redundant bits of code into utility functions, but I chose to experiment with different, more or less idiomatic approaches of implementing things, rather than spending too much time on abstractions.
 
 ## Disclaimer
 This is an exercise project and definitely not something you should use anywhere without modification as there may be subtle bugs for edge-cases that were not considered nor tested for.
 
+This project was build on Windows using `Mingw32` and the `gcc` compiler.
+
 ## Problems
 This section contains a list of problems or not-so-great things in terms of the implement and interface
 
-- **The state of the interface datatypes is transparent**
+- **The state of the interface data types is transparent**
   i.e. the user can access all the state exactly as the implementation can. The goal was not to develop a fully opaque library, so the interface was left open in terms of header-level implementation details
 - **Destroying a linked list does not protect the user from accessing the deallocated linked list**
-  When the linked list is destroyed, the pointer to the old linked list memory location persists in the user code. There should be some sort of abstraction to protect the user from invalid operation on a destroyed linked list
+  When the linked list is destroyed, the pointer to the old linked list memory location persists in the user code. There should be some sort of abstraction to protect the user from invalid operation on a destroyed linked list.
+  
+  A simple solution would be to require the pointer to the linked list instance so the instance can be deallocated and set to null without involving other user-code
+
+## Running the tests
+
+The tests do not fully cover all the edge-cases, and can be executed by compiling and executing the `tests.c` source file in the `source` directory as the entry point. The `Makefile` contains the following targets:
+
+- `compile` to compile the source code
+- `compile_and_run_tests` to both compile and execute the tests
 
 
 ## Documentation
-The following functions are available by including the `linked_list.h` header into the source file.
+The following functions are available by including the `linked_list.h` header into the source file found in the `include` directory.
 
 ### Naming conventions
 
@@ -34,7 +45,7 @@ The following functions are available by including the `linked_list.h` header in
 
 - `linked_list_bool_te`
 
-  An integer type used by the implementation to represent:
+  A typedef, enum integer type used by the implementation to represent:
 
   - Boolean true as `LINKED_LIST_TRUE`
   - Boolean false as `LINKED_LIST_FALSE`
@@ -46,7 +57,23 @@ The following functions are available by including the `linked_list.h` header in
 
 - `linked_list_instance_ts`
 
-  A struct that hold the reference to the linked list head on which all interface functions are based
+  A struct that hold the reference to the linked list head and node count, which all interface functions are based on
+  
+- `linked_list_traversal_callback_t`
+
+  A typedef pointer to a function which:
+
+  - Has parameters
+
+    - `int node_index`
+
+      The index of the node being traversed, starting at `1`
+
+    - `const char * const p_traversed_key`
+
+      Pointer to the null-terminated key string of the node being traversed
+
+  - Returns `void`
 
 ### Interface functions
 
@@ -58,7 +85,9 @@ The following functions are available by including the `linked_list.h` header in
 
   - **Signature**
 
-    `linked_list_instance_ts * linked_list_create(void)`
+    ```c
+    linked_list_instance_ts * linked_list_create(void)
+    ```
 
   - **Parameters**
 
@@ -67,7 +96,7 @@ The following functions are available by including the `linked_list.h` header in
   - **Return value**
 
     - `NULL` when a linked list instance cannot be allocated
-    - Instance of `linked_list_instance_ts` when the linked list was allocated successfully
+    - Pointer to a new instance of `linked_list_instance_ts` when the linked list was allocated successfully
 
 - **`linked_list_destroy`**
 
@@ -77,7 +106,9 @@ The following functions are available by including the `linked_list.h` header in
 
   - **Signature**
 
-    `void linked_list_destroy(linked_list_instance_ts * p_lili)`
+    ```c
+    void linked_list_destroy(linked_list_instance_ts * p_lili)
+    ```
 
   - **Parameters**
 
@@ -97,7 +128,9 @@ The following functions are available by including the `linked_list.h` header in
 
   - **Signature**
 
-    `void linked_list_visualize(const linked_list_instance_ts * p_lili, const char * p_tag)`
+    ```c
+    void linked_list_visualize(const linked_list_instance_ts * p_lili, const char * p_tag)
+    ```
 
   - **Parameters**
 
@@ -121,7 +154,12 @@ The following functions are available by including the `linked_list.h` header in
 
   - **Signature**
 
-    `linked_list_bool_te linked_list_insert(linked_list_instance_ts * p_lili, const char * p_insertion_key)`
+    ```c
+    linked_list_bool_te linked_list_insert(
+        linked_list_instance_ts * p_lili,
+        const char * p_insertion_key
+    )
+    ```
 
   - **Parameters**
 
@@ -131,102 +169,142 @@ The following functions are available by including the `linked_list.h` header in
 
     2. `const char * p_insertion_key`
 
-       Pointer to a null-terminated string that is to be inserted into the linked list node
+       Pointer to a null-terminated string that is to be inserted into the new linked list node
 
   - **Return value**
 
-    - `LINKED_LIST_TRUE` when a new node was inserted successfully for `p_tag`
-    - `LINKED_LIST_FALSE` when the linked list already contains a node with the same string as `p_tag`
+    - `LINKED_LIST_TRUE` when a new node was inserted successfully for `p_insertion_key`
+    - `LINKED_LIST_FALSE` when the linked list already contains a node with the corresponding `p_insertion_key`
 
 - **`linked_list_delete`**
 
   - **Description**
 
-    Delete existing node from the linked list with the specified string value
+    Delete existing node with the specified string value from the linked list
 
   - **Signature**
 
-    `linked_list_bool_te linked_list_delete(linked_list_instance_ts * p_lili, const char * p_deletion_key)`
-
-  - **Parameters**
-
-    ???
-
-  - **Return value**
-
-    - A
-    - B
+    ```c
+    linked_list_bool_te linked_list_delete(
+        linked_list_instance_ts * p_lili,
+        const char * p_deletion_key
+    )
+    ```
   
-- **`TODO-GS`**
+  - **Parameters**
+  
+    1. `linked_list_instance_ts * p_lili`
+  
+       Pointer to the linked list to delete node from
+  
+    2. `const char * p_deletion_key`
+  
+       Pointer to a null-terminated string that is to be deleted from the linked list
+  
+  - **Return value**
+  
+    - `LINKED_LIST_TRUE` when an existing node with the corresponding string `p_deletion_key` was successfully deleted
+    - `LINKED_LIST_FALSE` when the linked list does not contain a node with the string `p_deletion_key`
+  
+- **`linked_list_has_key`**
 
   - **Description**
 
-    ???
+    Query whether the linked list contains a node with the given key
 
   - **Signature**
 
-    ???
-
-  - **Parameters**
-
-    ???
-
-  - **Return value**
-
-    - A
-    - B
+    ```c
+    linked_list_bool_te linked_list_has_key(
+        linked_list_instance_ts * p_lili,
+        const char * p_search_key
+    )
+    ```
   
-- **`TODO-GS`**
+  - **Parameters**
+  
+    1. `linked_list_instance_ts * p_lili`
+  
+       Pointer to the linked list to check the existence of the provided key in
+  
+    2. `const char * p_search_key`
+  
+       Pointer to a null-terminated string the linked list is checked for
+  
+  - **Return value**
+  
+    - `LINKED_LIST_TRUE` when an existing node contains the corresponding `p_search_key` 
+    - `LINKED_LIST_FALSE` when the linked list does not contain a node with the corresponding `p_search_key`
+  
+- **`linked_list_size`**
 
   - **Description**
 
-    ???
+    Return the number of entries currently associated to the linked list
 
   - **Signature**
 
-    ???
+    ```c
+    int linked_list_size(const linked_list_instance_ts * p_lili)
+    ```
 
   - **Parameters**
 
-    ???
+    1. `const linked_list_instance_ts * p_lili`
 
-  - **Return value**
-
-    - A
-    - B
+       Pointer to the linked list to query the size from
   
-- **`TODO-GS`**
+  - **Return value**
+  
+    - Non-negative `int` that represents the number of nodes associated to the linked list
+  
+- **`linked_list_traverse_in_order`**
 
   - **Description**
 
-    ???
+    Traverse all keys and invoke a callback for every linked list node from the linked list head to the end in the order stored
 
   - **Signature**
 
-    ???
+    ```c
+    void linked_list_traverse_in_order(
+        const linked_list_instance_ts * p_lili,
+        linked_list_traversal_callback_t p_traversal_callback
+    )
+    ```
+  
+  - **Parameters**
+  
+    1. `const linked_list_instance_ts * p_lili`
+  
+       Pointer to the linked list to traverse through
+  
+    2. `linked_list_traversal_callback_t p_traversal_callback`
+  
+       Pointer to the callback to invoke for every node stored in the linked list
+  
+  - **Return value**
+  
+    None
+  
+- **`linked_list_reverse_in_place`**
+
+  - **Description**
+
+    Reverse the order of the linked list nodes in place
+
+  - **Signature**
+
+    ```c
+    void linked_list_reverse_in_place(linked_list_instance_ts * p_lili)
+    ```
 
   - **Parameters**
 
-    ???
+    1. `linked_list_instance_ts * p_lili`
 
+       Pointer to the linked list to reverse the nodes in
+  
   - **Return value**
-
-    - A
-    - B
-
-### Finalizing
-
-- documentation
-  + about this little project + focus on execution and functionality, not nice and very idiomatic code
-  + interface
-  + big picture
-  + what data saved
-  + problems (see below)
-- check spelling in readme
-- Add links to readme for navigation
-
-## Problems
-- destroying the linked list more than once causes freing of a previously deallocated pointer
-  the interface should work differently here?
-
-  The thing is that the linked list instance must not be accessed after is has been freed
+  
+    None
